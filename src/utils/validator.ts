@@ -1,5 +1,5 @@
 import Ajv, { ErrorObject } from 'ajv';
-import { userSchema } from '../models/user.schema';
+import { userSchema } from '../components/user/user.schema';
 import express from 'express';
 
 const ajv = new Ajv({ allErrors: true, removeAdditional: 'all' });
