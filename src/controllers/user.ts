@@ -19,22 +19,24 @@ export const updateUser = (userId: string, updatedUser: User): User|string => {
     const userIndex: number = usersList.findIndex(user => user.id === userId);
 
     if (userIndex >= 0) {
-        usersList.splice(userIndex, 1, { ...updatedUser, id: userId });
+        usersList.splice(userIndex, 1, { ...usersList[userIndex], ...updatedUser });
 
-        return updatedUser;
+        return { ...updatedUser, ...usersList[userIndex] };
     }
 
     return 'User not found';
 };
 
 export const deleteUser = (userId: string) => {
-    usersList.find(user => {
+    const deletedUser: User|undefined = usersList.find(user => {
         if (user.id === userId) {
             user.isDeleted = true;
 
             return true;
         }
     });
+
+    return deletedUser || 'User not found';
 };
 
 export const getAutoSuggestUsers = (loginSubstring: any, limit: any) => {

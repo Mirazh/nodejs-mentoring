@@ -1,6 +1,7 @@
 import express from 'express';
 import { User } from '../models/user';
 import { createUser, deleteUser, getUser, updateUser, getAutoSuggestUsers } from '../controllers/user';
+import { validateSchema } from '../utils/validator';
 
 const router = express.Router();
 
@@ -10,20 +11,21 @@ router.route('/user/:id')
 
         res.send(JSON.stringify(user, null, 2));
     })
-    .put((req: express.Request, res: express.Response) => {
+    .put(validateSchema('user'), (req: express.Request, res: express.Response) => {
         const user: User|string = updateUser(req.params.id, req.body);
 
         res.send(user);
     })
     .delete((req: express.Request, res: express.Response) => {
-        deleteUser(req.params.id);
-        res.send('User deleted');
+        const user: User|string = deleteUser(req.params.id);
+
+        res.send(user);
     });
 
-router.post('/user', (req: express.Request, res: express.Response) => {
+router.post('/user', validateSchema('user'), (req: express.Request, res: express.Response) => {
     const user: User = createUser(req.body);
 
-    res.json(user);
+    res.status(201).json(user);
 });
 
 router.get('/auto-suggest-users', (req: express.Request, res: express.Response) => {
