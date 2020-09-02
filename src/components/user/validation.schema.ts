@@ -1,4 +1,4 @@
-export const userSchema = {
+export const userValidationSchema = {
     'type': 'object',
     'properties': {
         'login': {

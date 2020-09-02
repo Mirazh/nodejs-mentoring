@@ -1,6 +1,12 @@
 import { sequelize, Model, DataTypes, UUIDV4 } from '../../db/connect';
 
-export class User extends Model {}
+export class User extends Model {
+    id: string | undefined
+    login: string | undefined
+    password: string | undefined
+    age: number | undefined
+    is_deleted: boolean | undefined
+}
 
 User.init({
     id: {

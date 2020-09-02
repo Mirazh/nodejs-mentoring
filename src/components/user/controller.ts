@@ -1,18 +1,18 @@
 import { User } from './model';
 import HTTP_STATUS from 'http-status';
 import express from 'express';
-import { Op } from 'sequelize';
+import { Service } from './service';
+import { OrderType } from './Types';
 
 export const getUser = async (req: express.Request, res: express.Response) => {
     try {
-        // need to extract to service
-        const user = await User
-            .findOne({
-                where: {
-                    id: req.params.id
-                },
-                raw: true
+        const user: User|null = await Service.findUserById(req.params.id);
+
+        if (!user) {
+            return res.status(HTTP_STATUS.NOT_FOUND).json({
+                success: false
             });
+        }
 
         res.status(HTTP_STATUS.OK).json({
             success: true,
@@ -28,7 +28,13 @@ export const getUser = async (req: express.Request, res: express.Response) => {
 
 export const createUser = async (req: express.Request, res: express.Response) => {
     try {
-        const user = await User.create(req.body);
+        const user: User|null = await Service.createUser(req.body);
+
+        if (!user) {
+            return res.status(HTTP_STATUS.NOT_FOUND).json({
+                success: false
+            });
+        }
 
         res.status(HTTP_STATUS.CREATED).json({
             success: true,
@@ -44,20 +50,7 @@ export const createUser = async (req: express.Request, res: express.Response) =>
 
 export const updateUser = async (req: express.Request, res: express.Response) => {
     try {
-        // need to extract to service
-        const user = await User
-            .findOne({
-                where: {
-                    id: req.params.id
-                },
-                raw: true
-            });
-
-        await User.update({ ...user, ...req.body }, {
-            where: {
-                id: req.params.id
-            }
-        });
+        await Service.update(req.params.id, req.body);
 
         res.status(HTTP_STATUS.OK).json({
             success: true
@@ -72,20 +65,17 @@ export const updateUser = async (req: express.Request, res: express.Response) =>
 
 export const deleteUser = async (req: express.Request, res: express.Response) => {
     try {
-        // need to extract to service
-        const user = await User
-            .findOne({
-                where: {
-                    id: req.params.id
-                },
-                raw: true
-            });
+        const user: User|null = await Service.findUserById(req.params.id);
 
-        await User.update({ ...user, is_deleted: true }, {
-            where: {
-                id: req.params.id
-            }
-        });
+        if (!user) {
+            return res.status(HTTP_STATUS.NOT_FOUND).json({
+                success: false
+            });
+        }
+
+        user.is_deleted = true;
+
+        await Service.update(req.params.id, user);
 
         res.status(HTTP_STATUS.OK).json({
             success: true
@@ -104,18 +94,8 @@ export const getAutoSuggestUsers = async (req: express.Request, res: express.Res
         const loginSubstring: string = req.query.login_substring;
         // @ts-ignore
         const limit: number = Number(req.query.limit);
-
-        const suggestedUsers = await User.findAll({
-            where: {
-                login: {
-                    [Op.like]: `%${loginSubstring}%`
-                }
-            },
-            order: [
-                ['login', 'ASC']
-            ],
-            limit
-        });
+        const order: OrderType = { field: 'login', type: 'ASC' };
+        const suggestedUsers: Array<User>|null = await Service.findAllUsersByLoginLike(loginSubstring, order, limit);
 
         res.status(HTTP_STATUS.OK).json({
             success: true,

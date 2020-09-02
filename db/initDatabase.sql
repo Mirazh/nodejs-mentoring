@@ -10,6 +10,6 @@ CREATE TABLE "Users" (
 
 INSERT INTO "Users" (id, login, password, age)
 VALUES
-    ('1', 'DenisSid1', '123qwe', 100),
-    ('2', 'DenisSid2', '123qwe', 4),
-    ('3', 'DenisSid3', '123qwe', 130);
+    ('1', 'CDenisSid1', '123qwe', 100),
+    ('2', 'ADenisSid2', '123qwe', 4),
+    ('3', 'BDenisSid3', '123qwe', 130);

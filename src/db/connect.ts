@@ -11,4 +11,4 @@ export const connectToDB = async () => {
     }
 };
 
-export { Model, DataTypes, UUIDV4 } from 'sequelize';
+export { Model, DataTypes, UUIDV4, Optional } from 'sequelize';

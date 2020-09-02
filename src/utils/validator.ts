@@ -1,11 +1,11 @@
 import Ajv, { ErrorObject } from 'ajv';
-import { userSchema } from '../components/user/user.schema';
+import { userValidationSchema } from '../components/user/validation.schema';
 import express from 'express';
 
 const ajv = new Ajv({ allErrors: true, removeAdditional: 'all' });
 require('ajv-errors')(ajv);
 
-ajv.addSchema(userSchema, 'user');
+ajv.addSchema(userValidationSchema, 'user');
 ajv.addKeyword('validatePassword', {
     validate: (value: any, data: any) => data.match(/^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]+)$/),
     errors: true
