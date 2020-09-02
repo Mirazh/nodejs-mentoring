@@ -1,66 +1,130 @@
-import { v4 as uuid } from 'uuid';
-import { User } from './user.model';
+import { User } from './model';
+import HTTP_STATUS from 'http-status';
+import express from 'express';
+import { Op } from 'sequelize';
 
-const usersList: User[] = [];
+export const getUser = async (req: express.Request, res: express.Response) => {
+    try {
+        // need to extract to service
+        const user = await User
+            .findOne({
+                where: {
+                    id: req.params.id
+                },
+                raw: true
+            });
 
-export const getUser = (userId: string): User|string => {
-    return usersList.find(user => user.id === userId) || 'User not found';
-};
-
-export const createUser = (user: User): User => {
-    const createdUser: User = { ...user, id: uuid() };
-
-    usersList.push(createdUser);
-
-    return createdUser;
-};
-
-export const updateUser = (userId: string, updatedUser: User): User|string => {
-    const userIndex: number = usersList.findIndex(user => user.id === userId);
-
-    if (userIndex >= 0) {
-        usersList.splice(userIndex, 1, { ...usersList[userIndex], ...updatedUser });
-
-        return { ...updatedUser, ...usersList[userIndex] };
+        res.status(HTTP_STATUS.OK).json({
+            success: true,
+            data: user
+        });
+    } catch (error) {
+        res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
+            success: false,
+            error
+        });
     }
-
-    return 'User not found';
 };
 
-export const deleteUser = (userId: string) => {
-    const deletedUser: User|undefined = usersList.find(user => {
-        if (user.id === userId) {
-            user.isDeleted = true;
+export const createUser = async (req: express.Request, res: express.Response) => {
+    try {
+        const user = await User.create(req.body);
 
-            return true;
-        }
-    });
-
-    return deletedUser || 'User not found';
+        res.status(HTTP_STATUS.CREATED).json({
+            success: true,
+            data: user
+        });
+    } catch (error) {
+        res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
+            success: false,
+            error
+        });
+    }
 };
 
-export const getAutoSuggestUsers = (loginSubstring: any, limit: any) => {
-    return usersList
-        .sort((a: User, b: User) => {
-            if (a.login < b.login) {
-                return -1;
-            }
+export const updateUser = async (req: express.Request, res: express.Response) => {
+    try {
+        // need to extract to service
+        const user = await User
+            .findOne({
+                where: {
+                    id: req.params.id
+                },
+                raw: true
+            });
 
-            if (a.login > b.login) {
-                return 1;
+        await User.update({ ...user, ...req.body }, {
+            where: {
+                id: req.params.id
             }
+        });
 
-            return 0;
-        })
-        .reduce((users: Array<User>, user: User): Array<User> => {
-            if (users.length === Number(limit)) {
-                return users;
+        res.status(HTTP_STATUS.OK).json({
+            success: true
+        });
+    } catch (error) {
+        res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
+            success: false,
+            error
+        });
+    }
+};
+
+export const deleteUser = async (req: express.Request, res: express.Response) => {
+    try {
+        // need to extract to service
+        const user = await User
+            .findOne({
+                where: {
+                    id: req.params.id
+                },
+                raw: true
+            });
+
+        await User.update({ ...user, is_deleted: true }, {
+            where: {
+                id: req.params.id
             }
+        });
 
-            if (user.login.toLocaleLowerCase().includes(loginSubstring.toLocaleLowerCase())) {
-                users.push(user);
-            }
+        res.status(HTTP_STATUS.OK).json({
+            success: true
+        });
+    } catch (error) {
+        res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
+            success: false,
+            error
+        });
+    }
+};
 
-            return users;
-        }, []);
+export const getAutoSuggestUsers = async (req: express.Request, res: express.Response) => {
+    try {
+        // @ts-ignore
+        const loginSubstring: string = req.query.login_substring;
+        // @ts-ignore
+        const limit: number = Number(req.query.limit);
+
+        const suggestedUsers = await User.findAll({
+            where: {
+                login: {
+                    [Op.like]: `%${loginSubstring}%`
+                }
+            },
+            order: [
+                ['login', 'ASC']
+            ],
+            limit
+        });
+
+        res.status(HTTP_STATUS.OK).json({
+            success: true,
+            data: suggestedUsers
+        });
+    } catch (error) {
+        res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
+            success: false,
+            error
+        });
+    }
 };

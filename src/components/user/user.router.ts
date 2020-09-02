@@ -1,37 +1,26 @@
 import express from 'express';
-import { User } from './user.model';
 import { createUser, deleteUser, getUser, updateUser, getAutoSuggestUsers } from './user.controller';
 import { validateSchema } from '../../utils/validator';
 
 const router = express.Router();
 
 router.route('/user/:id')
-    .get((req: express.Request, res: express.Response) => {
-        const user: User|string = getUser(req.params.id);
-
-        res.send(JSON.stringify(user, null, 2));
+    .get(async (req: express.Request, res: express.Response) => {
+        await getUser(req, res);
     })
-    .put(validateSchema('user'), (req: express.Request, res: express.Response) => {
-        const user: User|string = updateUser(req.params.id, req.body);
-
-        res.send(user);
+    .put(validateSchema('user'), async (req: express.Request, res: express.Response) => {
+        await updateUser(req, res);
     })
-    .delete((req: express.Request, res: express.Response) => {
-        const user: User|string = deleteUser(req.params.id);
-
-        res.send(user);
+    .delete(async (req: express.Request, res: express.Response) => {
+        await deleteUser(req, res);
     });
 
-router.post('/user', validateSchema('user'), (req: express.Request, res: express.Response) => {
-    const user: User = createUser(req.body);
-
-    res.status(201).json(user);
+router.post('/user', validateSchema('user'), async (req: express.Request, res: express.Response) => {
+    await createUser(req, res);
 });
 
-router.get('/auto-suggest-users', (req: express.Request, res: express.Response) => {
-    const suggestedUsers: Array<User> = getAutoSuggestUsers(req.query.login_substring, req.query.limit);
-
-    res.json(suggestedUsers);
+router.get('/auto-suggest-users', async (req: express.Request, res: express.Response) => {
+    await getAutoSuggestUsers(req, res);
 });
 
 export { router as userRouter };
