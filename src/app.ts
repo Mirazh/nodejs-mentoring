@@ -1,6 +1,6 @@
 import express from 'express';
 import { userRouter } from './components';
-import { connectToDB } from './db/connect';
+import { connectToDB } from './config/dbConnect';
 
 connectToDB().catch(console.error);
 

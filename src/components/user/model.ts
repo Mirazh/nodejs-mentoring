@@ -1,4 +1,4 @@
-import { sequelize, Model, DataTypes, UUIDV4 } from '../../db/connect';
+import { sequelize, Model, DataTypes, UUIDV4 } from '../../config/dbConnect';
 
 export class User extends Model {
     id: string | undefined
