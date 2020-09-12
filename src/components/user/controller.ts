@@ -50,7 +50,7 @@ export const createUser = async (req: express.Request, res: express.Response) =>
 
 export const updateUser = async (req: express.Request, res: express.Response) => {
     try {
-        await Service.update(req.params.id, req.body);
+        await Service.updateUser(req.params.id, req.body);
 
         res.status(HTTP_STATUS.OK).json({
             success: true
@@ -75,7 +75,7 @@ export const deleteUser = async (req: express.Request, res: express.Response) =>
 
         user.is_deleted = true;
 
-        await Service.update(req.params.id, user);
+        await Service.updateUser(req.params.id, user);
 
         res.status(HTTP_STATUS.OK).json({
             success: true

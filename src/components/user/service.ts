@@ -28,7 +28,7 @@ export const Service = {
     createUser: async (user: User): Promise<User|null> => {
         return await User.create(user);
     },
-    update: async (id: string, user: User): Promise<void> => {
+    updateUser: async (id: string, user: User): Promise<void> => {
         await User.update(user, {
             where: {
                 id
