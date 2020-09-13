@@ -1,6 +1,6 @@
 import { sequelize, Model, DataTypes, UUIDV4 } from '../../config/dbConnect';
 
-export class User extends Model {
+export class UserModel extends Model {
     id: string | undefined
     login: string | undefined
     password: string | undefined
@@ -8,7 +8,7 @@ export class User extends Model {
     is_deleted: boolean | undefined
 }
 
-User.init({
+UserModel.init({
     id: {
         type: DataTypes.UUID,
         defaultValue: UUIDV4,
@@ -36,5 +36,3 @@ User.init({
     modelName: 'User',
     timestamps: false
 });
-
-User.sync();

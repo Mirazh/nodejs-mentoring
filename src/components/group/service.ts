@@ -1,8 +1,8 @@
-import { Group } from './model';
+import { GroupModel } from './model';
 
 export const Service = {
-    findGroupById: async (id: string): Promise<Group|null> => {
-        return await Group
+    findGroupById: async (id: string): Promise<GroupModel|null> => {
+        return await GroupModel
             .findOne({
                 where: {
                     id
@@ -10,21 +10,21 @@ export const Service = {
                 raw: true
             });
     },
-    findAllGroups: async (): Promise<Array<Group>|null> => {
-        return await Group.findAll();
+    findAllGroups: async (): Promise<Array<GroupModel>|null> => {
+        return await GroupModel.findAll();
     },
-    createGroup: async (group: Group): Promise<Group|null> => {
-        return await Group.create(group);
+    createGroup: async (group: GroupModel): Promise<GroupModel|null> => {
+        return await GroupModel.create(group);
     },
-    updateGroup: async (id: string, group: Group): Promise<void> => {
-        await Group.update(group, {
+    updateGroup: async (id: string, group: GroupModel): Promise<void> => {
+        await GroupModel.update(group, {
             where: {
                 id
             }
         });
     },
     deleteGroupById: async (id: string) => {
-        await Group.destroy({
+        await GroupModel.destroy({
             where: {
                 id
             }

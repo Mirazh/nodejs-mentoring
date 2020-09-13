@@ -1,13 +1,13 @@
 import { sequelize, Model, DataTypes, UUIDV4 } from '../../config/dbConnect';
 import { permissions } from './types'
 
-export class Group extends Model {
+export class GroupModel extends Model {
     id: string | undefined
     name: string | undefined
     permissions: Array<permissions> | undefined
 }
 
-Group.init({
+GroupModel.init({
     id: {
         type: DataTypes.UUID,
         defaultValue: UUIDV4,
@@ -27,5 +27,3 @@ Group.init({
     modelName: 'Group',
     timestamps: false
 });
-
-Group.sync();

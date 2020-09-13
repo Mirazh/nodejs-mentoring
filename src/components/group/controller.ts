@@ -1,11 +1,11 @@
-import { Group } from './model';
+import { GroupModel } from './model';
 import HTTP_STATUS from 'http-status';
 import express from 'express';
 import { Service } from './service';
 
 export const getGroup = async (req: express.Request, res: express.Response) => {
     try {
-        const group: Group|null = await Service.findGroupById(req.params.id);
+        const group: GroupModel|null = await Service.findGroupById(req.params.id);
 
         if (!group) {
             return res.status(HTTP_STATUS.NOT_FOUND).json({
@@ -27,7 +27,7 @@ export const getGroup = async (req: express.Request, res: express.Response) => {
 
 export const getAllGroups = async (req: express.Request, res: express.Response) => {
     try {
-        const groups: Array<Group>|null = await Service.findAllGroups();
+        const groups: Array<GroupModel>|null = await Service.findAllGroups();
 
         if (!groups) {
             return res.status(HTTP_STATUS.NOT_FOUND).json({
@@ -49,7 +49,7 @@ export const getAllGroups = async (req: express.Request, res: express.Response) 
 
 export const createGroup = async (req: express.Request, res: express.Response) => {
     try {
-        const group: Group|null = await Service.createGroup(req.body);
+        const group: GroupModel|null = await Service.createGroup(req.body);
 
         if (!group) {
             return res.status(HTTP_STATUS.NOT_FOUND).json({

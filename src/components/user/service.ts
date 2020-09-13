@@ -1,10 +1,10 @@
-import { User } from './model';
+import { UserModel } from './model';
 import { Op } from 'sequelize';
 import { OrderType } from './Types';
 
 export const Service = {
-    findUserById: async (id: string): Promise<User|null> => {
-        return await User
+    findUserById: async (id: string): Promise<UserModel|null> => {
+        return await UserModel
             .findOne({
                 where: {
                     id
@@ -12,8 +12,8 @@ export const Service = {
                 raw: true
             });
     },
-    findAllUsersByLoginLike: async (likeString: string, order: OrderType, limit: number): Promise<Array<User>|null> => {
-        return await User.findAll({
+    findAllUsersByLoginLike: async (likeString: string, order: OrderType, limit: number): Promise<Array<UserModel>|null> => {
+        return await UserModel.findAll({
             where: {
                 login: {
                     [Op.like]: `%${likeString}%`
@@ -25,11 +25,11 @@ export const Service = {
             limit
         });
     },
-    createUser: async (user: User): Promise<User|null> => {
-        return await User.create(user);
+    createUser: async (user: UserModel): Promise<UserModel|null> => {
+        return await UserModel.create(user);
     },
-    updateUser: async (id: string, user: User): Promise<void> => {
-        await User.update(user, {
+    updateUser: async (id: string, user: UserModel): Promise<void> => {
+        await UserModel.update(user, {
             where: {
                 id
             }
