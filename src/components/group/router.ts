@@ -4,22 +4,22 @@ import { createGroup, deleteGroup, getAllGroups, getGroup, updateGroup } from '.
 const router = express.Router();
 
 router.route('/group/:id')
-    .get(async (req: express.Request, res: express.Response) => {
-        await getGroup(req, res);
+    .get((req: express.Request, res: express.Response) => {
+        getGroup(req, res);
     })
-    .put(async (req: express.Request, res: express.Response) => {
-        await updateGroup(req, res);
+    .put((req: express.Request, res: express.Response) => {
+        updateGroup(req, res);
     })
-    .delete(async (req: express.Request, res: express.Response) => {
-        await deleteGroup(req, res);
+    .delete((req: express.Request, res: express.Response) => {
+        deleteGroup(req, res);
     });
 
 router.route('/group')
-    .post(async (req: express.Request, res: express.Response) => {
-        await createGroup(req, res);
+    .post((req: express.Request, res: express.Response) => {
+        createGroup(req, res);
     })
-    .get(async (req: express.Request, res: express.Response) => {
-        await getAllGroups(req, res);
+    .get((req: express.Request, res: express.Response) => {
+        getAllGroups(req, res);
     });
 
 export { router as groupRouter };
