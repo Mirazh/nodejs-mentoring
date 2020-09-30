@@ -1,4 +1,4 @@
-import { User } from './model';
+import { UserModel } from './model';
 import HTTP_STATUS from 'http-status';
 import express from 'express';
 import { Service } from './service';
@@ -6,7 +6,7 @@ import { OrderType } from './Types';
 
 export const getUser = async (req: express.Request, res: express.Response) => {
     try {
-        const user: User|null = await Service.findUserById(req.params.id);
+        const user: UserModel|null = await Service.findUserById(req.params.id);
 
         if (!user) {
             return res.status(HTTP_STATUS.NOT_FOUND).json({
@@ -28,7 +28,7 @@ export const getUser = async (req: express.Request, res: express.Response) => {
 
 export const createUser = async (req: express.Request, res: express.Response) => {
     try {
-        const user: User|null = await Service.createUser(req.body);
+        const user: UserModel|null = await Service.createUser(req.body);
 
         if (!user) {
             return res.status(HTTP_STATUS.NOT_FOUND).json({
@@ -50,7 +50,7 @@ export const createUser = async (req: express.Request, res: express.Response) =>
 
 export const updateUser = async (req: express.Request, res: express.Response) => {
     try {
-        await Service.update(req.params.id, req.body);
+        await Service.updateUser(req.params.id, req.body);
 
         res.status(HTTP_STATUS.OK).json({
             success: true
@@ -65,7 +65,7 @@ export const updateUser = async (req: express.Request, res: express.Response) =>
 
 export const deleteUser = async (req: express.Request, res: express.Response) => {
     try {
-        const user: User|null = await Service.findUserById(req.params.id);
+        const user: UserModel|null = await Service.findUserById(req.params.id);
 
         if (!user) {
             return res.status(HTTP_STATUS.NOT_FOUND).json({
@@ -75,7 +75,7 @@ export const deleteUser = async (req: express.Request, res: express.Response) =>
 
         user.is_deleted = true;
 
-        await Service.update(req.params.id, user);
+        await Service.updateUser(req.params.id, user);
 
         res.status(HTTP_STATUS.OK).json({
             success: true
@@ -95,7 +95,7 @@ export const getAutoSuggestUsers = async (req: express.Request, res: express.Res
         // @ts-ignore
         const limit: number = Number(req.query.limit);
         const order: OrderType = { field: 'login', type: 'ASC' };
-        const suggestedUsers: Array<User>|null = await Service.findAllUsersByLoginLike(loginSubstring, order, limit);
+        const suggestedUsers: Array<UserModel>|null = await Service.findAllUsersByLoginLike(loginSubstring, order, limit);
 
         res.status(HTTP_STATUS.OK).json({
             success: true,
