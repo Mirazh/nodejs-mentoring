@@ -3,26 +3,19 @@ import HTTP_STATUS from 'http-status';
 import express from 'express';
 import { Service } from './service';
 import { OrderType } from './Types';
+import { sendError, sendJSON } from '../../utils/response';
 
 export const getUser = async (req: express.Request, res: express.Response) => {
     try {
         const user: UserModel|null = await Service.findUserById(req.params.id);
 
         if (!user) {
-            return res.status(HTTP_STATUS.NOT_FOUND).json({
-                success: false
-            });
+            return sendError(res, '', HTTP_STATUS.NOT_FOUND);
         }
 
-        res.status(HTTP_STATUS.OK).json({
-            success: true,
-            data: user
-        });
+        sendJSON(res, { user });
     } catch (error) {
-        res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
-            success: false,
-            error
-        });
+        sendError(res, error);
     }
 };
 
@@ -31,20 +24,12 @@ export const createUser = async (req: express.Request, res: express.Response) =>
         const user: UserModel|null = await Service.createUser(req.body);
 
         if (!user) {
-            return res.status(HTTP_STATUS.NOT_FOUND).json({
-                success: false
-            });
+            return sendError(res, '', HTTP_STATUS.NOT_FOUND);
         }
 
-        res.status(HTTP_STATUS.CREATED).json({
-            success: true,
-            data: user
-        });
+        sendJSON(res, { user }, HTTP_STATUS.CREATED);
     } catch (error) {
-        res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
-            success: false,
-            error
-        });
+        sendError(res, error);
     }
 };
 
@@ -52,14 +37,9 @@ export const updateUser = async (req: express.Request, res: express.Response) =>
     try {
         await Service.updateUser(req.params.id, req.body);
 
-        res.status(HTTP_STATUS.OK).json({
-            success: true
-        });
+        sendJSON(res);
     } catch (error) {
-        res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
-            success: false,
-            error
-        });
+        sendError(res, error);
     }
 };
 
@@ -68,23 +48,16 @@ export const deleteUser = async (req: express.Request, res: express.Response) =>
         const user: UserModel|null = await Service.findUserById(req.params.id);
 
         if (!user) {
-            return res.status(HTTP_STATUS.NOT_FOUND).json({
-                success: false
-            });
+            return sendError(res, '', HTTP_STATUS.NOT_FOUND);
         }
 
         user.is_deleted = true;
 
         await Service.updateUser(req.params.id, user);
 
-        res.status(HTTP_STATUS.OK).json({
-            success: true
-        });
+        sendJSON(res);
     } catch (error) {
-        res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
-            success: false,
-            error
-        });
+        sendError(res, error);
     }
 };
 
@@ -97,14 +70,8 @@ export const getAutoSuggestUsers = async (req: express.Request, res: express.Res
         const order: OrderType = { field: 'login', type: 'ASC' };
         const suggestedUsers: Array<UserModel>|null = await Service.findAllUsersByLoginLike(loginSubstring, order, limit);
 
-        res.status(HTTP_STATUS.OK).json({
-            success: true,
-            data: suggestedUsers
-        });
+        sendJSON(res, { suggestedUsers });
     } catch (error) {
-        res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
-            success: false,
-            error
-        });
+        sendError(res, error);
     }
 };
