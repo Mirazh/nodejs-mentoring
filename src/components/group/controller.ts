@@ -16,7 +16,7 @@ export const getGroup = async (req: express.Request, res: express.Response) => {
 
         sendJSON(res, { group });
     } catch (error) {
-        sendError(res, error);
+        sendError(res, { message: error.message, method: 'getGroup', params: [req, res] });
     }
 };
 
@@ -25,12 +25,12 @@ export const getAllGroups = async (req: express.Request, res: express.Response) 
         const groups: Array<GroupModel>|null = await Service.findAllGroups();
 
         if (!groups) {
-            return sendError(res, '', HTTP_STATUS.NOT_FOUND);
+            return sendError(res, {}, HTTP_STATUS.NOT_FOUND);
         }
 
         sendJSON(res, { groups });
     } catch (error) {
-        sendError(res, error);
+        sendError(res, { message: error.message, method: 'getAllGroups', params: [req, res] });
     }
 };
 
@@ -39,12 +39,12 @@ export const createGroup = async (req: express.Request, res: express.Response) =
         const group: GroupModel|null = await Service.createGroup(req.body);
 
         if (!group) {
-            return sendError(res, '', HTTP_STATUS.NOT_FOUND);
+            return sendError(res, {}, HTTP_STATUS.NOT_FOUND);
         }
 
         sendJSON(res, { group }, HTTP_STATUS.CREATED);
     } catch (error) {
-        return sendError(res, error);
+        return sendError(res, { message: error.message, method: 'createGroup', params: [req, res] });
     }
 };
 
@@ -54,7 +54,7 @@ export const updateGroup = async (req: express.Request, res: express.Response) =
 
         sendJSON(res);
     } catch (error) {
-        sendError(res, error);
+        sendError(res, { message: error.message, method: 'updateGroup', params: [req, res] });
     }
 };
 
@@ -64,6 +64,6 @@ export const deleteGroup = async (req: express.Request, res: express.Response) =
 
         sendJSON(res);
     } catch (error) {
-        sendError(res, error);
+        sendError(res, { message: error.message, method: 'deleteGroup', params: [req, res] });
     }
 };

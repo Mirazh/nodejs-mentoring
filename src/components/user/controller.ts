@@ -10,12 +10,12 @@ export const getUser = async (req: express.Request, res: express.Response) => {
         const user: UserModel|null = await Service.findUserById(req.params.id);
 
         if (!user) {
-            return sendError(res, '', HTTP_STATUS.NOT_FOUND);
+            return sendError(res, {}, HTTP_STATUS.NOT_FOUND);
         }
 
         sendJSON(res, { user });
     } catch (error) {
-        sendError(res, error);
+        sendError(res, { message: error.message, method: 'getUser', params: [req, res] });
     }
 };
 
@@ -24,12 +24,12 @@ export const createUser = async (req: express.Request, res: express.Response) =>
         const user: UserModel|null = await Service.createUser(req.body);
 
         if (!user) {
-            return sendError(res, '', HTTP_STATUS.NOT_FOUND);
+            return sendError(res, {}, HTTP_STATUS.NOT_FOUND);
         }
 
         sendJSON(res, { user }, HTTP_STATUS.CREATED);
     } catch (error) {
-        sendError(res, error);
+        sendError(res, { message: error.message, method: 'createUser', params: [req, res] });
     }
 };
 
@@ -39,7 +39,7 @@ export const updateUser = async (req: express.Request, res: express.Response) =>
 
         sendJSON(res);
     } catch (error) {
-        sendError(res, error);
+        sendError(res, { message: error.message, method: 'updateUser', params: [req, res] });
     }
 };
 
@@ -48,7 +48,7 @@ export const deleteUser = async (req: express.Request, res: express.Response) =>
         const user: UserModel|null = await Service.findUserById(req.params.id);
 
         if (!user) {
-            return sendError(res, '', HTTP_STATUS.NOT_FOUND);
+            return sendError(res, {}, HTTP_STATUS.NOT_FOUND);
         }
 
         user.is_deleted = true;
@@ -57,7 +57,7 @@ export const deleteUser = async (req: express.Request, res: express.Response) =>
 
         sendJSON(res);
     } catch (error) {
-        sendError(res, error);
+        sendError(res, { message: error.message, method: 'deleteUser', params: [req, res] });
     }
 };
 
@@ -72,6 +72,6 @@ export const getAutoSuggestUsers = async (req: express.Request, res: express.Res
 
         sendJSON(res, { suggestedUsers });
     } catch (error) {
-        sendError(res, error);
+        sendError(res, { message: error.message, method: 'getAutoSuggestUsers', params: [req, res] });
     }
 };

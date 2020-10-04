@@ -18,7 +18,7 @@ const customLogger = (req: express.Request, res: express.Response, next: express
     next();
 };
 const errorHandler = (err: Error, req: express.Request, res: express.Response, next: express.NextFunction) => {
-    sendError(res, err.message);
+    sendError(res, { message: err.message, method: 'errorHandler', params: [req, res] });
 };
 
 app.use(express.json());
