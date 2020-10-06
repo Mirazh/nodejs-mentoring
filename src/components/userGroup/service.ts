@@ -1,4 +1,4 @@
-import { UserGroup } from './model'
+import { UserGroup } from './model';
 import { sequelize } from '../../config/dbConnect';
 
 export const Service = {
@@ -7,17 +7,17 @@ export const Service = {
 
         const data = userIds.map(userId => ({
             user_id: userId,
-            group_id: groupId,
+            group_id: groupId
         }));
 
         try {
             await UserGroup.bulkCreate(data, { transaction });
 
-            return await transaction.commit()
+            return await transaction.commit();
         } catch (error) {
             await transaction.rollback();
 
-            return error
+            return error;
         }
     }
 };

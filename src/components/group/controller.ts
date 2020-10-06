@@ -2,6 +2,7 @@ import { GroupModel } from './model';
 import HTTP_STATUS from 'http-status';
 import express from 'express';
 import { Service } from './service';
+import { sendJSON, sendError } from '../../utils/response';
 
 export const getGroup = async (req: express.Request, res: express.Response) => {
     try {
@@ -13,15 +14,9 @@ export const getGroup = async (req: express.Request, res: express.Response) => {
             });
         }
 
-        res.status(HTTP_STATUS.OK).json({
-            success: true,
-            data: group
-        });
+        sendJSON(res, { group });
     } catch (error) {
-        res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
-            success: false,
-            error
-        });
+        sendError(res, { message: error.message, method: 'getGroup', params: [req, res] });
     }
 };
 
@@ -30,20 +25,12 @@ export const getAllGroups = async (req: express.Request, res: express.Response) 
         const groups: Array<GroupModel>|null = await Service.findAllGroups();
 
         if (!groups) {
-            return res.status(HTTP_STATUS.NOT_FOUND).json({
-                success: false
-            });
+            return sendError(res, {}, HTTP_STATUS.NOT_FOUND);
         }
 
-        res.status(HTTP_STATUS.OK).json({
-            success: true,
-            data: groups
-        });
+        sendJSON(res, { groups });
     } catch (error) {
-        res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
-            success: false,
-            error
-        });
+        sendError(res, { message: error.message, method: 'getAllGroups', params: [req, res] });
     }
 };
 
@@ -52,20 +39,12 @@ export const createGroup = async (req: express.Request, res: express.Response) =
         const group: GroupModel|null = await Service.createGroup(req.body);
 
         if (!group) {
-            return res.status(HTTP_STATUS.NOT_FOUND).json({
-                success: false
-            });
+            return sendError(res, {}, HTTP_STATUS.NOT_FOUND);
         }
 
-        res.status(HTTP_STATUS.CREATED).json({
-            success: true,
-            data: group
-        });
+        sendJSON(res, { group }, HTTP_STATUS.CREATED);
     } catch (error) {
-        res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
-            success: false,
-            error
-        });
+        return sendError(res, { message: error.message, method: 'createGroup', params: [req, res] });
     }
 };
 
@@ -73,14 +52,9 @@ export const updateGroup = async (req: express.Request, res: express.Response) =
     try {
         await Service.updateGroup(req.params.id, req.body);
 
-        res.status(HTTP_STATUS.OK).json({
-            success: true
-        });
+        sendJSON(res);
     } catch (error) {
-        res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
-            success: false,
-            error
-        });
+        sendError(res, { message: error.message, method: 'updateGroup', params: [req, res] });
     }
 };
 
@@ -88,13 +62,8 @@ export const deleteGroup = async (req: express.Request, res: express.Response) =
     try {
         await Service.deleteGroupById(req.params.id);
 
-        res.status(HTTP_STATUS.OK).json({
-            success: true
-        });
+        sendJSON(res);
     } catch (error) {
-        res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
-            success: false,
-            error
-        });
+        sendError(res, { message: error.message, method: 'deleteGroup', params: [req, res] });
     }
 };

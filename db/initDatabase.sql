@@ -14,7 +14,7 @@ VALUES
 
 -------------------------------------------------
 
-DROP TABLE IF EXISTS "Users";
+DROP TABLE IF EXISTS "Groups";
 CREATE TABLE "Groups" (
     id UUID PRIMARY KEY NOT NULL,
     name VARCHAR UNIQUE NOT NULL,
