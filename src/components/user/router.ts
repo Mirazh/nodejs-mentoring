@@ -1,5 +1,5 @@
 import express from 'express';
-import { createUser, deleteUser, getUser, updateUser, getAutoSuggestUsers } from './controller';
+import { createUser, deleteUser, getUser, updateUser, getAutoSuggestUsers, login } from './controller';
 import { validateSchema } from '../../utils/validator';
 
 const router = express.Router();
@@ -21,6 +21,10 @@ router.post('/user', validateSchema('user'), (req: express.Request, res: express
 
 router.get('/auto-suggest-users', (req: express.Request, res: express.Response) => {
     getAutoSuggestUsers(req, res);
+});
+
+router.post('/login', (req: express.Request, res: express.Response) => {
+    login(req, res);
 });
 
 export { router as userRouter };

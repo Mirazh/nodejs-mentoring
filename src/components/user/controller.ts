@@ -1,6 +1,7 @@
-import { UserModel } from './model';
 import HTTP_STATUS from 'http-status';
 import express from 'express';
+import jwt from 'jsonwebtoken';
+import { UserModel } from './model';
 import { Service } from './service';
 import { OrderType } from './Types';
 import { sendError, sendJSON } from '../../utils/response';
@@ -73,5 +74,24 @@ export const getAutoSuggestUsers = async (req: express.Request, res: express.Res
         sendJSON(res, { suggestedUsers });
     } catch (error) {
         sendError(res, { message: error.message, method: 'getAutoSuggestUsers', params: [req, res] });
+    }
+};
+
+export const login = async (req: express.Request, res: express.Response) => {
+    try {
+        const user: UserModel|null = await Service.findUserByLogin(req.body.login);
+
+        if (!user || user.password !== req.body.password) {
+            return sendError(res, { message: 'Bad login/password combination', method: 'login', params: [req, res] });
+        }
+
+        const payload = { sub: user.id, isDeleted: user.is_deleted };
+        const token = jwt.sign(payload, 'superMegaSecretWord', { expiresIn: 999999999 });
+
+        sendJSON(res, { token });
+    } catch (error) {
+        const { body, params, query } = req;
+
+        sendError(res, { message: error.message, method: 'login', params: { body, params, query } });
     }
 };

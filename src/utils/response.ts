@@ -2,6 +2,8 @@ import express from 'express';
 import HTTP_STATUS from 'http-status';
 
 export const sendError = (res: express.Response, error: {}, status = HTTP_STATUS.INTERNAL_SERVER_ERROR) => {
+    console.log('error', error);
+
     res.status(status).json({
         success: false,
         ...error
