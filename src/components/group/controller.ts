@@ -16,7 +16,7 @@ export const getGroup = async (req: express.Request, res: express.Response) => {
 
         sendJSON(res, { group });
     } catch (error) {
-        sendError(res, { message: error.message, method: 'getGroup', params: [req, res] });
+        sendError(res, { message: error.message, method: 'getGroup', params: { req } });
     }
 };
 
@@ -30,7 +30,7 @@ export const getAllGroups = async (req: express.Request, res: express.Response) 
 
         sendJSON(res, { groups });
     } catch (error) {
-        sendError(res, { message: error.message, method: 'getAllGroups', params: [req, res] });
+        sendError(res, { message: error.message, method: 'getAllGroups', params: { req } });
     }
 };
 
@@ -44,7 +44,7 @@ export const createGroup = async (req: express.Request, res: express.Response) =
 
         sendJSON(res, { group }, HTTP_STATUS.CREATED);
     } catch (error) {
-        return sendError(res, { message: error.message, method: 'createGroup', params: [req, res] });
+        return sendError(res, { message: error.message, method: 'createGroup', params: { req } });
     }
 };
 
@@ -54,7 +54,7 @@ export const updateGroup = async (req: express.Request, res: express.Response) =
 
         sendJSON(res);
     } catch (error) {
-        sendError(res, { message: error.message, method: 'updateGroup', params: [req, res] });
+        sendError(res, { message: error.message, method: 'updateGroup', params: { req } });
     }
 };
 
@@ -64,6 +64,6 @@ export const deleteGroup = async (req: express.Request, res: express.Response) =
 
         sendJSON(res);
     } catch (error) {
-        sendError(res, { message: error.message, method: 'deleteGroup', params: [req, res] });
+        sendError(res, { message: error.message, method: 'deleteGroup', params: { req } });
     }
 };
