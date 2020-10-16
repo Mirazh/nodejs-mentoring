@@ -3,6 +3,7 @@ import { apiRouter } from './routes';
 import { connectToDB } from './config/dbConnect';
 import { logger } from './utils/logger';
 import { sendError } from './utils/response';
+import { checkToken } from './utils/authentication';
 
 import { UserGroupService } from './components/userGroup';
 import { Service as GroupService } from './components/group';
@@ -23,6 +24,7 @@ const errorHandler = (err: Error, req: express.Request, res: express.Response, n
 
 app.use(express.json());
 app.use(customLogger);
+app.use(checkToken);
 app.use(apiRouter);
 app.use(errorHandler);
 

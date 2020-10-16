@@ -10,16 +10,20 @@ export const createToken = (payload: Object) => {
 };
 
 export const checkToken = (req: express.Request, res: express.Response, next: express.NextFunction) => {
-    const token = req.headers['x-access-token'];
+    if (req.originalUrl === '/login') {
+        return next();
+    }
 
-    if (token) {
-        jwt.verify(token, SECRET, (error: Error) => {
-            if (error) {
-                return sendError(res, { message: error.message }, HTTP_STATUS.FORBIDDEN);
-            }
+    const token: string|string[]|undefined = req.headers['x-access-token'];
 
-            next();
-        });
+    if (typeof token === 'string' && token) {
+        try {
+            jwt.verify(token, SECRET);
+
+            return next();
+        } catch (error) {
+            sendError(res, { message: error.message }, HTTP_STATUS.FORBIDDEN);
+        }
     } else {
         return sendError(res, { message: 'No token provided' }, HTTP_STATUS.UNAUTHORIZED);
     }
