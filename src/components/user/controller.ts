@@ -1,10 +1,10 @@
 import HTTP_STATUS from 'http-status';
 import express from 'express';
-import jwt from 'jsonwebtoken';
 import { UserModel } from './model';
 import { Service } from './service';
 import { OrderType } from './Types';
 import { sendError, sendJSON } from '../../utils/response';
+import { createToken } from '../../utils/authentication';
 
 export const getUser = async (req: express.Request, res: express.Response) => {
     try {
@@ -86,7 +86,7 @@ export const login = async (req: express.Request, res: express.Response) => {
         }
 
         const payload = { sub: user.id, isDeleted: user.is_deleted };
-        const token = jwt.sign(payload, 'superMegaSecretWord', { expiresIn: 999999999 });
+        const token = createToken(payload);
 
         sendJSON(res, { token });
     } catch (error) {
