@@ -1,4 +1,5 @@
 import express from 'express';
+import cors from 'cors';
 import { apiRouter } from './routes';
 import { connectToDB } from './config/dbConnect';
 import { logger } from './utils/logger';
@@ -22,6 +23,7 @@ const errorHandler = (err: Error, req: express.Request, res: express.Response, n
     sendError(res, { message: err.message, method: 'errorHandler', params: { req } });
 };
 
+app.use(cors({ origin: true }));
 app.use(express.json());
 app.use(customLogger);
 app.use(checkToken);
