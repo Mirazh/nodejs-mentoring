@@ -1,9 +1,10 @@
-import { UserModel } from './model';
 import HTTP_STATUS from 'http-status';
 import express from 'express';
+import { UserModel } from './model';
 import { Service } from './service';
 import { OrderType } from './Types';
 import { sendError, sendJSON } from '../../utils/response';
+import { createToken } from '../../utils/authentication';
 
 export const getUser = async (req: express.Request, res: express.Response) => {
     try {
@@ -15,7 +16,7 @@ export const getUser = async (req: express.Request, res: express.Response) => {
 
         sendJSON(res, { user });
     } catch (error) {
-        sendError(res, { message: error.message, method: 'getUser', params: [req, res] });
+        sendError(res, { message: error.message, method: 'getUser', params: { req } });
     }
 };
 
@@ -29,7 +30,7 @@ export const createUser = async (req: express.Request, res: express.Response) =>
 
         sendJSON(res, { user }, HTTP_STATUS.CREATED);
     } catch (error) {
-        sendError(res, { message: error.message, method: 'createUser', params: [req, res] });
+        sendError(res, { message: error.message, method: 'createUser', params: { req } });
     }
 };
 
@@ -39,7 +40,7 @@ export const updateUser = async (req: express.Request, res: express.Response) =>
 
         sendJSON(res);
     } catch (error) {
-        sendError(res, { message: error.message, method: 'updateUser', params: [req, res] });
+        sendError(res, { message: error.message, method: 'updateUser', params: { req } });
     }
 };
 
@@ -57,7 +58,7 @@ export const deleteUser = async (req: express.Request, res: express.Response) =>
 
         sendJSON(res);
     } catch (error) {
-        sendError(res, { message: error.message, method: 'deleteUser', params: [req, res] });
+        sendError(res, { message: error.message, method: 'deleteUser', params: { req } });
     }
 };
 
@@ -72,6 +73,23 @@ export const getAutoSuggestUsers = async (req: express.Request, res: express.Res
 
         sendJSON(res, { suggestedUsers });
     } catch (error) {
-        sendError(res, { message: error.message, method: 'getAutoSuggestUsers', params: [req, res] });
+        sendError(res, { message: error.message, method: 'getAutoSuggestUsers', params: { req } });
+    }
+};
+
+export const login = async (req: express.Request, res: express.Response) => {
+    try {
+        const user: UserModel|null = await Service.findUserByLogin(req.body.login);
+
+        if (!user || user.password !== req.body.password) {
+            return sendError(res, { message: 'Bad login/password combination', method: 'login', params: { req } });
+        }
+
+        const payload = { sub: user.id, isDeleted: user.is_deleted };
+        const token = createToken(payload);
+
+        sendJSON(res, { token });
+    } catch (error) {
+        sendError(res, { message: error.message, method: 'login', params: { req } });
     }
 };

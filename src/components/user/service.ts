@@ -34,5 +34,14 @@ export const Service = {
                 id
             }
         });
+    },
+    findUserByLogin: async (login: string): Promise<UserModel|null> => {
+        return await UserModel
+            .findOne({
+                where: {
+                    login
+                },
+                raw: true
+            });
     }
 };

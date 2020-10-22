@@ -1,8 +1,10 @@
 import express from 'express';
+import cors from 'cors';
 import { apiRouter } from './routes';
 import { connectToDB } from './config/dbConnect';
 import { logger } from './utils/logger';
 import { sendError } from './utils/response';
+import { checkToken } from './utils/authentication';
 
 import { UserGroupService } from './components/userGroup';
 import { Service as GroupService } from './components/group';
@@ -18,11 +20,13 @@ const customLogger = (req: express.Request, res: express.Response, next: express
     next();
 };
 const errorHandler = (err: Error, req: express.Request, res: express.Response, next: express.NextFunction) => {
-    sendError(res, { message: err.message, method: 'errorHandler', params: [req, res] });
+    sendError(res, { message: err.message, method: 'errorHandler', params: { req } });
 };
 
+app.use(cors({ origin: true }));
 app.use(express.json());
 app.use(customLogger);
+app.use(checkToken);
 app.use(apiRouter);
 app.use(errorHandler);
 
