@@ -1,4 +1,4 @@
-export const mockRequest = (params: Object) => {
+export const mockRequest = (params?: Object) => {
     return {
         ...params
     };

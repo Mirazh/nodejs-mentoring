@@ -1,5 +1,5 @@
 import { sequelize, Model, DataTypes, UUIDV4 } from '../../config/dbConnect';
-import { permissions } from './types'
+import { permissions } from './types';
 
 export class GroupModel extends Model {
     id: string | undefined
@@ -20,7 +20,7 @@ GroupModel.init({
     },
     permissions: {
         type: DataTypes.ARRAY(DataTypes.STRING),
-        allowNull: false,
+        allowNull: false
     }
 }, {
     sequelize,
