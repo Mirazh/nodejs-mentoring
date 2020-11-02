@@ -6,9 +6,6 @@ import { logger } from './utils/logger';
 import { sendError } from './utils/response';
 import { checkToken } from './utils/authentication';
 
-import { UserGroupService } from './components/userGroup';
-import { Service as GroupService } from './components/group';
-
 const app: express.Application = express();
 const PORT = 3000;
 const customLogger = (req: express.Request, res: express.Response, next: express.NextFunction) => {
@@ -19,6 +16,7 @@ const customLogger = (req: express.Request, res: express.Response, next: express
 
     next();
 };
+// eslint-disable-next-line no-unused-vars
 const errorHandler = (err: Error, req: express.Request, res: express.Response, next: express.NextFunction) => {
     sendError(res, { message: err.message, method: 'errorHandler', params: { req } });
 };
@@ -40,11 +38,4 @@ connectToDB().then(() => app.listen(PORT, async (err: Error) => {
     }
 
     logger.info(`App listening at http://localhost:${PORT}`);
-
-    // await UserGroupService.addUserToGroup(
-    //     '83499fc6-fa72-11ea-adc1-0242ac120002',
-    //     ['01b7587c-fa72-11ea-adc1-0242ac120002', '01b75c14-fa72-11ea-adc1-0242ac120002']
-    // );
-
-    // await GroupService.deleteGroupById('83499fc6-fa72-11ea-adc1-0242ac120002')
 }));
